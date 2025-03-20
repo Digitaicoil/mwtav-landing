@@ -1,34 +1,11 @@
 import { useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FaPhone, FaWhatsapp, FaEnvelope, FaCheckCircle, FaShieldAlt, FaClock, FaFileAlt, FaArrowUp, FaExclamationTriangle } from 'react-icons/fa';
 // @ts-ignore
 import logo from '../Logo.png';
 
-const fadeInUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 }
-};
-
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2
-    }
-  }
-};
-
 function App() {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1
-  });
-
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const { scrollYProgress } = useScroll();
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   useEffect(() => {
     const handleScroll = () => {
