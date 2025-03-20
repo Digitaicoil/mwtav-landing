@@ -7,11 +7,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#2563eb',
-        secondary: '#1e40af',
-        accent: '#f59e0b',
-        warning: '#ef4444',
+        primary: '#1E3C72',
+        secondary: '#E31E24',
+        warning: '#E31E24',
         success: '#22c55e',
+        accent: '#3b82f6',
       },
       fontFamily: {
         sans: ['Rubik', 'sans-serif'],
@@ -19,9 +19,9 @@ export default {
       animation: {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'float': 'float 6s ease-in-out infinite',
-        'shine': 'shine 3s infinite',
+        'shine': 'shine 1.5s ease-in-out infinite',
         'gradient': 'gradient 8s linear infinite',
-        'bounce-slow': 'bounce 3s infinite',
+        'bounce-slow': 'bounce 3s ease-in-out infinite',
       },
       keyframes: {
         float: {
@@ -29,8 +29,7 @@ export default {
           '50%': { transform: 'translateY(-20px)' },
         },
         shine: {
-          '0%': { backgroundPosition: '200% center' },
-          '100%': { backgroundPosition: '-200% center' },
+          '100%': { transform: 'translateX(100%)' },
         },
         gradient: {
           '0%, 100%': {
@@ -49,7 +48,7 @@ export default {
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(var(--tw-gradient-stops))',
       }
     },
   },

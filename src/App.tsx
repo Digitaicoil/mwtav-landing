@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { FaPhone, FaWhatsapp, FaEnvelope, FaCheckCircle, FaShieldAlt, FaClock, FaFileAlt, FaArrowUp } from 'react-icons/fa';
+// @ts-ignore
+import logo from '../Logo.png';
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -46,7 +48,7 @@ function App() {
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <motion.div
-          className="absolute inset-0 bg-gradient-to-br from-primary to-secondary animate-gradient"
+          className="absolute inset-0 bg-gradient-to-br from-[#1E3C72] to-[#E31E24] animate-gradient"
           style={{ opacity }}
         />
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
@@ -57,6 +59,14 @@ function App() {
           transition={{ duration: 0.8 }}
           className="relative text-center px-4 max-w-4xl mx-auto"
         >
+          <motion.img
+            src={logo}
+            alt="מ.ו בטיחות ותברואה"
+            className="w-48 md:w-64 mx-auto mb-8"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+          />
           <motion.div
             initial={{ scale: 0.8 }}
             animate={{ scale: 1 }}
@@ -329,6 +339,61 @@ function App() {
         </div>
       </section>
 
+      {/* About Section - NEW */}
+      <section className="py-20 px-4 bg-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-radial from-gray-50 to-white opacity-50" />
+        <div className="max-w-6xl mx-auto relative">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="section-title bg-clip-text text-transparent bg-gradient-to-r from-[#1E3C72] to-[#E31E24]">
+              אודות מ.ו בטיחות ותברואה
+            </h2>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-white rounded-2xl p-8 shadow-lg relative overflow-hidden group"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-[#1E3C72]/5 to-[#E31E24]/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="relative">
+              <div className="flex flex-col md:flex-row items-center gap-8 mb-8">
+                <div className="md:w-1/3">
+                  <img src={logo} alt="מ.ו בטיחות ותברואה" className="w-full h-auto" />
+                </div>
+                <div className="md:w-2/3 text-right">
+                  <p className="text-lg leading-relaxed text-gray-700 mb-4">
+                    חברת מ.ו בטיחות ותברואה הינה חברה מובילה וותיקה עם מעל 25 שנים של ניסיון ומוניטין המספקת את כל מבדקי הבטיחות השנתיים למוסדות חינוכיים ולעסקים.
+                  </p>
+                  <p className="text-lg leading-relaxed text-gray-700">
+                    מ.ו הנה החברה המובילה בישראל שמתמחה ברישוי מקיף עבור מוסדות חינוך בפריסה ארצית.
+                  </p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-gray-50 p-6 rounded-xl group/card hover:bg-gray-100 transition-colors">
+                  <div className="text-[#1E3C72] text-4xl font-bold mb-2">25+</div>
+                  <div className="text-gray-600">שנות ניסיון</div>
+                </div>
+                <div className="bg-gray-50 p-6 rounded-xl group/card hover:bg-gray-100 transition-colors">
+                  <div className="text-[#E31E24] text-4xl font-bold mb-2">1000+</div>
+                  <div className="text-gray-600">לקוחות מרוצים</div>
+                </div>
+                <div className="bg-gray-50 p-6 rounded-xl group/card hover:bg-gray-100 transition-colors">
+                  <div className="text-[#1E3C72] text-4xl font-bold mb-2">100%</div>
+                  <div className="text-gray-600">שביעות רצון</div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Scroll to Top Button */}
       <AnimatePresence>
         {showScrollTop && (
@@ -343,6 +408,27 @@ function App() {
           </motion.button>
         )}
       </AnimatePresence>
+
+      {/* Update colors in other sections to match logo */}
+      <style>
+        {`
+          .btn-primary {
+            background-color: #1E3C72;
+          }
+          .text-primary {
+            color: #1E3C72;
+          }
+          .text-secondary {
+            color: #E31E24;
+          }
+          .from-primary {
+            --tw-gradient-from: #1E3C72;
+          }
+          .to-secondary {
+            --tw-gradient-to: #E31E24;
+          }
+        `}
+      </style>
     </div>
   );
 }
