@@ -23,9 +23,9 @@ export default {
         'scale-in': 'scaleIn 0.3s ease-out',
         'bounce-slow': 'bounce 3s ease-in-out infinite',
         'float': 'float 6s ease-in-out infinite',
-        'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+        'pulse-glow': 'pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'gradient': 'gradient 8s linear infinite',
-        'shine': 'shine 1.5s ease-in-out infinite',
+        'shine': 'shine 1.5s infinite',
       },
       keyframes: {
         fadeIn: {
@@ -48,20 +48,36 @@ export default {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-20px)' },
         },
-        pulseGlow: {
-          '0%, 100%': { opacity: '1', transform: 'scale(1)' },
-          '50%': { opacity: '0.8', transform: 'scale(1.05)' },
-        },
         gradient: {
-          '0%': { backgroundPosition: '0% 50%' },
-          '100%': { backgroundPosition: '100% 50%' },
+          '0%, 100%': {
+            'background-position': '0% 50%'
+          },
+          '50%': {
+            'background-position': '100% 50%'
+          }
         },
         shine: {
-          '0%': { backgroundPosition: '200% 0' },
-          '100%': { backgroundPosition: '-200% 0' },
+          '0%': {
+            'transform': 'translateX(-100%)'
+          },
+          '100%': {
+            'transform': 'translateX(100%)'
+          }
         },
+        'pulse-glow': {
+          '0%, 100%': {
+            'opacity': '1',
+            'transform': 'scale(1)'
+          },
+          '50%': {
+            'opacity': '.8',
+            'transform': 'scale(1.05)'
+          }
+        }
       },
       backgroundImage: {
+        'radial-gradient': 'radial-gradient(circle, var(--tw-gradient-stops))',
+        'conic-gradient': 'conic-gradient(var(--tw-gradient-stops))',
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
         'gradient-shine': 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
