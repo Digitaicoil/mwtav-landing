@@ -1,11 +1,39 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaPhone, FaWhatsapp, FaEnvelope, FaCheckCircle, FaShieldAlt, FaClock, FaFileAlt, FaArrowUp, FaExclamationTriangle } from 'react-icons/fa';
+import { useState, useEffect, useRef } from 'react';
+import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
+import { FaCheckCircle, FaShieldAlt, FaFileAlt, FaArrowUp, FaExclamationTriangle, FaPlayCircle } from 'react-icons/fa';
 // @ts-ignore
 import logo from '../Logo.png';
+// @ts-ignore
+import heroVideo from '../public/hero.mp4';
+// @ts-ignore
+import safety1 from '../public/images/safety1.svg';
+// @ts-ignore
+import safety2 from '../public/images/safety2.svg';
+// @ts-ignore
+import safety3 from '../public/images/safety3.svg';
 
 function App() {
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    message: ''
+  });
+
+  const heroRef = useRef(null);
+  const aboutRef = useRef(null);
+  const servicesRef = useRef(null);
+  const contactRef = useRef(null);
+
+  const { scrollYProgress } = useScroll();
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
+
+  const isAboutInView = useInView(aboutRef);
+  const isServicesInView = useInView(servicesRef);
+  const isContactInView = useInView(contactRef);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,6 +43,12 @@ function App() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // כאן יהיה הטיפול בשליחת הטופס
+    console.log('Form submitted:', formData);
+  };
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -35,113 +69,60 @@ function App() {
         </div>
       </motion.div>
 
-      {/* Hero Section */}
-      <section className="min-h-[90vh] relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#1E3C72] to-[#2a5298]">
-        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#1E3C72]/50 to-[#1E3C72]" />
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-right"
-            >
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="mb-8"
+      {/* Hero Section with Video Background */}
+      <section ref={heroRef} className="min-h-screen relative flex items-center justify-center overflow-hidden">
+        <motion.div 
+          style={{ opacity: heroOpacity, scale: heroScale }}
+          className="absolute inset-0 z-0"
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-[#1E3C72] to-[#2a5298] z-10" />
+          <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10 z-20" />
+        </motion.div>
+
+        <div className="container mx-auto px-4 relative z-20">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            className="text-center text-white"
+          >
+            <img src={logo} alt="מ.ו בטיחות ותברואה" className="w-48 md:w-64 mx-auto mb-8" />
+            <h1 className="text-5xl md:text-7xl font-bold mb-6">
+              המומחים ברישוי
+              <br />
+              <span className="text-[#E31E24]">מוסדות חינוך</span>
+            </h1>
+            <p className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto">
+              25 שנות ניסיון במתן פתרונות רישוי מקיפים למוסדות חינוך.
+              אנחנו מטפלים בכל התהליך - אתם מתמקדים בחינוך.
+            </p>
+            <div className="flex flex-wrap justify-center gap-6">
+              <motion.a
+                href="#contact-form"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-[#E31E24] text-white px-8 py-4 rounded-lg font-medium text-xl shadow-lg hover:shadow-xl transition-all duration-300"
               >
-                <img src={logo} alt="מ.ו בטיחות ותברואה" className="w-48 md:w-64" />
-              </motion.div>
-              
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white leading-tight">
-                המומחים ברישוי <br />
-                <span className="text-[#E31E24]">מוסדות חינוך</span>
-              </h1>
-              
-              <p className="text-xl text-white/90 mb-8 leading-relaxed">
-                חברה מובילה עם מעל 25 שנות ניסיון במתן פתרונות רישוי מקיפים למוסדות חינוך.
-                אנחנו מטפלים בכל התהליך - אתם מתמקדים בחינוך.
-              </p>
-
-              <div className="flex gap-4 flex-wrap">
-                <a
-                  href="https://wa.me/972509150665"
-                  className="bg-[#E31E24] text-white px-8 py-4 rounded-lg font-medium hover:bg-[#ff2b32] transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-                >
-                  <FaWhatsapp className="text-xl" />
-                  <span>דברו איתנו בוואטסאפ</span>
-                </a>
-                <a
-                  href="tel:046451113"
-                  className="bg-white text-[#1E3C72] px-8 py-4 rounded-lg font-medium hover:bg-gray-100 transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-                >
-                  <FaPhone className="text-xl" />
-                  <span>04-6451113</span>
-                </a>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              className="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-2xl"
-            >
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold text-white mb-4">למה לבחור בנו?</h2>
-                <p className="text-white/80">החברה המובילה בישראל לרישוי מוסדות חינוך</p>
-              </div>
-
-              <div className="grid gap-6">
-                {[
-                  {
-                    icon: FaShieldAlt,
-                    title: "מקצועיות ואמינות",
-                    description: "צוות מומחים מנוסה עם ידע נרחב"
-                  },
-                  {
-                    icon: FaClock,
-                    title: "25+ שנות ניסיון",
-                    description: "אלפי פרויקטים מוצלחים"
-                  },
-                  {
-                    icon: FaFileAlt,
-                    title: "ליווי מלא ומקיף",
-                    description: "מהשלב הראשון ועד לקבלת הרישיון"
-                  }
-                ].map((item, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 + index * 0.2 }}
-                    className="bg-white/5 backdrop-blur-sm rounded-xl p-6 hover:bg-white/10 transition-all duration-300"
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className="bg-[#E31E24] p-3 rounded-lg">
-                        <item.icon className="text-2xl text-white" />
-                      </div>
-                      <div className="text-right">
-                        <h3 className="text-lg font-semibold text-white mb-2">{item.title}</h3>
-                        <p className="text-white/70">{item.description}</p>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
+                דברו איתנו עכשיו
+              </motion.a>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setIsVideoPlaying(!isVideoPlaying)}
+                className="bg-white/20 backdrop-blur-sm text-white px-8 py-4 rounded-lg font-medium text-xl flex items-center gap-2"
+              >
+                <FaPlayCircle />
+                <span>צפו בסרטון</span>
+              </motion.button>
+            </div>
+          </motion.div>
         </div>
 
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 cursor-pointer"
-          onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 cursor-pointer z-20"
+          onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
         >
           <div className="w-6 h-10 border-2 border-white rounded-full p-1">
             <div className="w-1.5 h-1.5 bg-white rounded-full mx-auto animate-bounce" />
@@ -149,199 +130,208 @@ function App() {
         </motion.div>
       </section>
 
-      {/* About Section */}
-      <section className="py-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1E3C72] to-transparent opacity-10" />
-        <div className="container mx-auto px-4 relative">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-4xl mx-auto text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[#1E3C72] to-[#E31E24]">
-              אודות מ.ו בטיחות ותברואה
-            </h2>
-            <p className="text-xl text-gray-600 leading-relaxed">
-              חברת מ.ו בטיחות ותברואה הינה חברה מובילה וותיקה עם מעל 25 שנים של ניסיון ומוניטין המספקת את כל מבדקי הבטיחות השנתיים למוסדות חינוכיים ולעסקים.
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
-            >
-              <div className="text-[#1E3C72] text-5xl font-bold mb-4">25+</div>
-              <h3 className="text-xl font-semibold mb-2">שנות ניסיון</h3>
-              <p className="text-gray-600">ניסיון עשיר בתחום הבטיחות והתברואה</p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
-            >
-              <div className="text-[#E31E24] text-5xl font-bold mb-4">1000+</div>
-              <h3 className="text-xl font-semibold mb-2">לקוחות מרוצים</h3>
-              <p className="text-gray-600">מוסדות חינוך ועסקים ברחבי הארץ</p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.4 }}
-              className="bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
-            >
-              <div className="text-[#1E3C72] text-5xl font-bold mb-4">100%</div>
-              <h3 className="text-xl font-semibold mb-2">הצלחה</h3>
-              <p className="text-gray-600">מחויבות מלאה להצלחת הלקוחות שלנו</p>
-            </motion.div>
+      {/* About Section with Parallax Images */}
+      <section id="about" ref={aboutRef} className="py-20 relative overflow-hidden">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isAboutInView ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ duration: 1 }}
+          className="container mx-auto px-4"
+        >
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="relative h-[600px] overflow-hidden rounded-2xl">
+              <motion.div
+                style={{
+                  y: useTransform(scrollYProgress, [0.2, 0.4], [0, -100])
+                }}
+                className="absolute inset-0"
+              >
+                <img src={safety1} alt="בטיחות במוסדות חינוך" className="w-full h-full object-cover" />
+              </motion.div>
+            </div>
+            <div>
+              <motion.h2
+                initial={{ x: 100, opacity: 0 }}
+                animate={isAboutInView ? { x: 0, opacity: 1 } : { x: 100, opacity: 0 }}
+                className="text-4xl font-bold mb-6"
+              >
+                25 שנות מצוינות בבטיחות
+              </motion.h2>
+              <motion.p
+                initial={{ x: 100, opacity: 0 }}
+                animate={isAboutInView ? { x: 0, opacity: 1 } : { x: 100, opacity: 0 }}
+                transition={{ delay: 0.2 }}
+                className="text-xl text-gray-600 mb-8"
+              >
+                חברת מ.ו בטיחות ותברואה מובילה את תחום בטיחות מוסדות החינוך בישראל.
+                אנו מספקים פתרונות מקיפים ומקצועיים, תוך שימת דגש על איכות, אמינות ושירות מעולה.
+              </motion.p>
+              <div className="grid grid-cols-2 gap-8">
+                <motion.div
+                  initial={{ y: 50, opacity: 0 }}
+                  animate={isAboutInView ? { y: 0, opacity: 1 } : { y: 50, opacity: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-center p-6 bg-white rounded-xl shadow-lg"
+                >
+                  <div className="text-4xl font-bold text-[#E31E24] mb-2">+1000</div>
+                  <div className="text-gray-600">לקוחות מרוצים</div>
+                </motion.div>
+                <motion.div
+                  initial={{ y: 50, opacity: 0 }}
+                  animate={isAboutInView ? { y: 0, opacity: 1 } : { y: 50, opacity: 0 }}
+                  transition={{ delay: 0.6 }}
+                  className="text-center p-6 bg-white rounded-xl shadow-lg"
+                >
+                  <div className="text-4xl font-bold text-[#1E3C72] mb-2">100%</div>
+                  <div className="text-gray-600">שביעות רצון</div>
+                </motion.div>
+              </div>
+            </div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
-      {/* Services Section */}
-      <section className="py-20 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
-        <div className="container mx-auto px-4 relative">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
+      {/* Services Section with Interactive Cards */}
+      <section id="services" ref={servicesRef} className="py-20 bg-gray-100">
+        <div className="container mx-auto px-4">
+          <motion.h2
+            initial={{ opacity: 0, y: 50 }}
+            animate={isServicesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+            className="text-4xl font-bold text-center mb-16"
           >
-            <h2 className="text-4xl font-bold mb-6">השירותים שלנו</h2>
-            <p className="text-xl text-gray-600">פתרון מקיף לכל צרכי הרישוי והבטיחות</p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            השירותים שלנו
+          </motion.h2>
+          <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                title: "אישור בטיחות למשרד החינוך",
+                title: "אישור בטיחות",
                 description: "בדיקות מקיפות ומקצועיות לפי תקנים",
-                icon: FaShieldAlt
+                icon: FaShieldAlt,
+                image: safety1
               },
               {
-                title: "אישור תברואן מומחה",
-                description: "בדיקות תברואה מקיפות ומקצועיות",
-                icon: FaCheckCircle
+                title: "אישור תברואן",
+                description: "בדיקות תברואה מקיפות",
+                icon: FaCheckCircle,
+                image: safety2
               },
               {
-                title: "בדיקות חשמל ומבנה",
-                description: "סככות, תקרות, יציבות ועוד",
-                icon: FaFileAlt
-              },
-              {
-                title: "בדיקות ציוד כיבוי אש",
-                description: "מערכות מים ומתקני משחק",
-                icon: FaShieldAlt
-              },
-              {
-                title: "חידוש רישיון מעון",
-                description: "טיפול מלא ללא מאמץ מצדכם",
-                icon: FaFileAlt
-              },
-              {
-                title: "תיעוד ואישורים",
-                description: "אישורי אדריכל ויועץ נגישות",
-                icon: FaCheckCircle
+                title: "חידוש רישיון",
+                description: "טיפול מלא בחידוש רישיונות",
+                icon: FaFileAlt,
+                image: safety3
               }
             ].map((service, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group"
+                initial={{ opacity: 0, y: 50 }}
+                animate={isServicesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+                transition={{ delay: index * 0.2 }}
+                className="group relative overflow-hidden rounded-2xl"
               >
-                <div className="bg-gradient-to-r from-[#1E3C72] to-[#E31E24] p-3 rounded-xl inline-block mb-6 group-hover:scale-110 transition-transform">
-                  <service.icon className="text-3xl text-white" />
+                <div className="absolute inset-0">
+                  <img src={service.image} alt={service.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                 </div>
-                <h3 className="text-xl font-semibold mb-4">{service.title}</h3>
-                <p className="text-gray-600">{service.description}</p>
+                <div className="relative p-8 h-[400px] flex flex-col justify-end text-white">
+                  <service.icon className="text-4xl mb-4" />
+                  <h3 className="text-2xl font-bold mb-2">{service.title}</h3>
+                  <p className="text-white/80">{service.description}</p>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="mt-6 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-lg hover:bg-white/30 transition-all duration-300"
+                  >
+                    למידע נוסף
+                  </motion.button>
+                </div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-[#1E3C72] relative overflow-hidden">
+      {/* Contact Form Section */}
+      <section id="contact" ref={contactRef} className="py-20 bg-[#1E3C72] relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />
         <div className="container mx-auto px-4 relative">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 md:p-12"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                צריכים עזרה עם רישוי המוסד?
-              </h2>
-              <p className="text-xl text-white/90 mb-8">
-                צוות המומחים שלנו כאן בשבילכם 24/7. צרו קשר עוד היום!
-              </p>
-              <div className="flex flex-wrap justify-center gap-4">
-                <a
-                  href="https://wa.me/972509150665"
-                  className="bg-[#E31E24] text-white px-8 py-4 rounded-lg font-medium hover:bg-[#ff2b32] transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={isContactInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+            className="max-w-4xl mx-auto bg-white rounded-2xl p-8 md:p-12 shadow-2xl"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-8">
+              צרו איתנו קשר
+            </h2>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <motion.div
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={isContactInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
+                  transition={{ delay: 0.2 }}
                 >
-                  <FaWhatsapp className="text-xl" />
-                  <span>וואטסאפ</span>
-                </a>
-                <a
-                  href="tel:046451113"
-                  className="bg-white text-[#1E3C72] px-8 py-4 rounded-lg font-medium hover:bg-gray-100 transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                  <label className="block text-gray-700 mb-2">שם מלא</label>
+                  <input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[#1E3C72] focus:ring-2 focus:ring-[#1E3C72]/20 transition-all duration-300"
+                    required
+                  />
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={isContactInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
+                  transition={{ delay: 0.3 }}
                 >
-                  <FaPhone className="text-xl" />
-                  <span>התקשרו עכשיו</span>
-                </a>
-                <a
-                  href="mailto:info@mwtav.com"
-                  className="bg-white/10 text-white px-8 py-4 rounded-lg font-medium hover:bg-white/20 transition-all duration-300 flex items-center gap-2"
-                >
-                  <FaEnvelope className="text-xl" />
-                  <span>שלחו מייל</span>
-                </a>
+                  <label className="block text-gray-700 mb-2">טלפון</label>
+                  <input
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[#1E3C72] focus:ring-2 focus:ring-[#1E3C72]/20 transition-all duration-300"
+                    required
+                  />
+                </motion.div>
               </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Info */}
-      <section className="py-12 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <FaWhatsapp className="text-3xl text-[#E31E24] mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">וואטסאפ</h3>
-              <a href="https://wa.me/972509150665" className="text-gray-600 hover:text-[#E31E24]">
-                050-915-0665
-              </a>
-            </div>
-            <div className="text-center">
-              <FaPhone className="text-3xl text-[#1E3C72] mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">טלפון</h3>
-              <a href="tel:046451113" className="text-gray-600 hover:text-[#1E3C72]">
-                04-6451113
-              </a>
-            </div>
-            <div className="text-center">
-              <FaEnvelope className="text-3xl text-[#E31E24] mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">אימייל</h3>
-              <a href="mailto:info@mwtav.com" className="text-gray-600 hover:text-[#E31E24]">
-                info@mwtav.com
-              </a>
-            </div>
-          </div>
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                animate={isContactInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+                transition={{ delay: 0.4 }}
+              >
+                <label className="block text-gray-700 mb-2">אימייל</label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[#1E3C72] focus:ring-2 focus:ring-[#1E3C72]/20 transition-all duration-300"
+                  required
+                />
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                animate={isContactInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+                transition={{ delay: 0.5 }}
+              >
+                <label className="block text-gray-700 mb-2">הודעה</label>
+                <textarea
+                  value={formData.message}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  rows={4}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[#1E3C72] focus:ring-2 focus:ring-[#1E3C72]/20 transition-all duration-300"
+                  required
+                />
+              </motion.div>
+              <motion.button
+                type="submit"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="w-full bg-[#E31E24] text-white py-4 rounded-lg font-medium text-lg hover:bg-[#ff2b32] transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                שליחה
+              </motion.button>
+            </form>
+          </motion.div>
         </div>
       </section>
 
